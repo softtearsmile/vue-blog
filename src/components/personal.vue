@@ -1,0 +1,234 @@
+<template>
+  <div id="box">
+    <!--用户登入界面-->
+    <div id="login" v-if="session">
+      <mu-container>
+        <mu-form ref="form" :model="validateForm" class="mu-demo-form">
+          <mu-form-item label="用户名" help-text="" prop="username" :rules="usernameRules">
+            <mu-text-field v-model="validateForm.username" prop="username"></mu-text-field>
+          </mu-form-item>
+          <mu-form-item label="密码" prop="password" :rules="passwordRules">
+            <mu-text-field type="password" v-model="validateForm.password" prop="password"></mu-text-field>
+          </mu-form-item>
+          <!--<mu-form-item prop="isAgree" :rules="argeeRules">-->
+          <!--<mu-checkbox label="同意用户协议" v-model="validateForm.isAgree"></mu-checkbox>-->
+          <!--</mu-form-item>-->
+          <mu-form-item>
+            <mu-button color="primary" @click="login">登入</mu-button>
+            <mu-button @click="reg">注册</mu-button>
+          </mu-form-item>
+        </mu-form>
+      </mu-container>
+    </div>
+    <!--个人中心-->
+    <div id="personal" v-else>
+      <div id="img">
+        <img src="http://106.14.145.207/node/images/遥.jpg" width="100%" height="100%">
+      </div>
+      <h3>{{username}}</h3>
+      <mu-container>
+        <mu-button @click="show4 = !show4">菜单</mu-button>
+        <mu-button @click="logout" style="margin-left: 1rem ">退出</mu-button>
+        <mu-flex class="mu-transition-row">
+          <mu-scale-transition v-if="role===666">
+            <mu-button class="mu-transition-box mu-primary-color mu-inverse" v-show="show4">
+              用户管理
+            </mu-button>
+          </mu-scale-transition>
+          <mu-scale-transition>
+            <mu-button :to="{name:'controlArticle'}" class="mu-transition-box mu-primary-color mu-inverse"
+                       v-show="show4">
+              文章管理
+            </mu-button>
+          </mu-scale-transition>
+        </mu-flex>
+        <mu-flex class="mu-transition-row">
+          <mu-scale-transition v-if="0">
+            <mu-button class="mu-transition-box mu-primary-color mu-inverse" v-show="show4">
+              评论管理
+            </mu-button>
+          </mu-scale-transition>
+          <mu-scale-transition v-if="0">
+            <mu-button class="mu-transition-box mu-primary-color mu-inverse" v-show="show4">
+              头像上传
+            </mu-button>
+          </mu-scale-transition>
+        </mu-flex>
+      </mu-container>
+    </div>
+    <!--弹窗-->
+    <mu-dialog title="" width="360" :open.sync="openSimple">
+      <p>{{openMsg}}</p>
+      <mu-button slot="actions" flat color="primary" @click="closeSimpleDialog">关闭</mu-button>
+    </mu-dialog>
+  </div>
+</template>
+
+<script>
+  export default {
+    name: "personal",
+    methods: {
+      login() {  //登入
+        this.$refs.form.validate().then((result) => {
+          // console.log('form valid: ', result)
+          if (result) {
+            this.$ajax.post('user/login', {
+              username: this.$refs.form.$el[0].value,
+              password: this.$refs.form.$el[1].value
+            })
+              .then(res => {
+                // console.log(res.data)
+                setTimeout(() => { //定时刷新页面
+                  window.location.reload()
+                }, 1000)
+
+                if (res.data.status) {
+                  this.openSimple = true  //弹窗显示
+                  this.openMsg = res.data.msg  //返回的文本
+
+                } else {
+                  this.openSimple = true
+                  this.openMsg = res.data.msg
+                }
+              });
+          }
+        });
+      },
+      logout() {  //退出
+        this.$ajax.get('user/logout')
+          .then(res => {
+            // console.log(res.data.session)
+            //恢复登入状态初始值
+            this.$store.commit('conSession', res.data.session)
+            this.$store.commit('conUid', res.data.uid)
+            this.$store.commit('conUsername', res.data.username)
+            this.$store.commit('conRole', res.data.role)
+          });
+      },
+      reg() {  //注册
+        this.$refs.form.validate().then((result) => {
+          if (result) {
+            this.$ajax.post('user/reg', {
+              username: this.$refs.form.$el[0].value,
+              password: this.$refs.form.$el[1].value
+            })
+              .then(res => {
+                if (res.data.status) {
+                  this.openSimple = true
+                  this.openMsg = res.data.msg
+                } else {
+                  this.openSimple = true
+                  this.openMsg = res.data.msg
+                }
+              });
+          }
+        })
+      },
+      closeSimpleDialog() {
+        this.openSimple = false
+      }
+    },
+    data() {
+      return {
+        usernameRules: [ //表单输入
+          {validate: (val) => !!val, message: '必须填写用户名'},
+          {validate: (val) => val.length >= 3, message: '用户名长度大于3'}
+        ],
+        passwordRules: [
+          {validate: (val) => !!val, message: '必须填写密码'},
+          {validate: (val) => val.length >= 3 && val.length <= 10, message: '密码长度大于3小于10'}
+        ],
+        // argeeRules: [{validate: (val) => !!val, message: '必须同意用户协议'}],
+        validateForm: {
+          username: '',
+          password: '',
+          isAgree: false
+        },
+        openSimple: false,  //弹窗的显示和隐藏
+        openMsg: '',  //弹窗信息
+        show4: true,
+      }
+    },
+    computed: {
+      session() {
+        return this.$store.state.session
+      },
+      uid() {
+        return this.$store.state.uid
+      },
+      username() {
+        return this.$store.state.username
+      },
+      role() {
+        return this.$store.state.role
+      },
+
+    },
+    created: function () {
+      this.$ajax.get('user')
+        .then(res => {
+          // console.log(res.data)
+          // console.log(res.data.session)
+          //更新登入状态值
+          this.$store.commit('conSession', res.data.session)
+          this.$store.commit('conUid', res.data.uid)
+          this.$store.commit('conUsername', res.data.username)
+          this.$store.commit('conRole', res.data.role)
+          // console.log(this.session)
+          // console.log(this.uid)
+          // console.log(this.username)
+          // console.log(this.role)
+        });
+    }
+  }
+</script>
+
+<style scoped>
+
+  /*登入界面*/
+  .mu-demo-form {
+    width: 100%;
+    max-width: 460px;
+  }
+
+  #login {
+    margin: 180px 40px 0 40px;
+    box-shadow: 3px 3px 3px 3px gainsboro;
+  }
+  /*个人中心*/
+  #personal {
+    padding: 40px 50px 100px 50px;
+  }
+
+  #img {
+    width: 100px;
+    height: 100px;
+    margin: 30px auto;
+    box-shadow: 3px 3px 3px 3px gainsboro;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  h3{
+    text-align: center;
+  }
+  .mu-transition-row {
+    justify-content: space-around !important;
+    text-align: center;
+    margin-top: 30px;
+    height: 50px;
+  }
+
+  .mu-transition-box {
+    min-width: 100px;
+    height: 50px;
+    /*margin-right: 16px;*/
+    border-radius: 4px;
+    /*padding: 0 16px;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .container{
+    text-align: center;
+  }
+</style>
