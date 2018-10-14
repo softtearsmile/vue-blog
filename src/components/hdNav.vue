@@ -37,7 +37,7 @@
         this.openSimple = false
       },
       publish() {
-        console.log(this.session)
+        // console.log(this.session)
         if (this.session) {
           this.openSimple = true
         }else {

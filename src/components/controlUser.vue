@@ -1,13 +1,15 @@
 <template>
   <div>
     <ul class="th">
-      <li>文章标题</li>
-      <li>评论数</li>
+      <li>用户</li>
+      <li>文章</li>
+      <li>权限</li>
       <li>操作</li>
     </ul>
-    <ul class="th" v-for="(item,index) in articleList" :key="index">
-      <li>{{item.title}}</li>
-      <li>{{item.commentNum}}</li>
+    <ul class="th" v-for="(item,index) in userList" :key="index">
+      <li>{{item.username}}</li>
+      <li>{{item.articleNum}}</li>
+      <li>{{item.role}}</li>
       <li>
         <mu-button @click="openAlertDialog(item._id)" color="error">删除</mu-button>
       </li>
@@ -30,19 +32,19 @@
 
 <script>
   export default {
-    name: "controlArticle",
+    name: "controlUser",
     data() {
       return {
-        articleList : [],
+        userList: [],
         openAlert: false,  //警告弹窗显示和隐藏
         openSimple: false,  //提示弹窗的显示和隐藏
         openMsg: '',  //弹窗信息
-        data:'',
+        data:''
       }
     },
     computed: {
-      session() {
-        this.$store.state.session
+      connector() {
+        this.$store.state.connector
       }
     },
     methods: {
@@ -60,7 +62,7 @@
             } else {
               // console.log(this.session)
               // console.log(uid)
-              this.$ajax.delete('article/delete?uid='+uid)
+              this.$ajax.delete('user/delete?uid='+uid)
                 .then(res => {
                   // console.log(res.data)
                   if (res.data.status) {
@@ -91,33 +93,16 @@
       }
     },
     created() {
-      //获取当前用户文章
-      this.$ajax.get('user/articles')
+      this.$ajax.get('user/users')
         .then(res => {
-          // console.log(res.data.articleList)
-          this.articleList = res.data.articleList
-        })
+          // console.log(res.data.userList)
+          this.userList = res.data.userList
+        });
     }
   }
 </script>
 
 <style scoped>
-  table {
-    width: 375px;
-    border: 1px solid black;
-    border-collapse: collapse;
-  }
-
-  table th {
-    width: 100px;
-    height: 50px;
-    border: 1px solid #000;
-    text-align: center;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
   .th {
     list-style: none;
     padding: 0;

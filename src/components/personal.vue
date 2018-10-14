@@ -27,11 +27,13 @@
       </div>
       <h3>{{username}}</h3>
       <mu-container>
-        <mu-button @click="show4 = !show4">菜单</mu-button>
-        <mu-button @click="logout" style="margin-left: 1rem ">退出</mu-button>
+        <div id="polBtn">
+          <mu-button @click="show4 = !show4">菜单</mu-button>
+          <mu-button @click="logout" style="margin-left: 1rem ">退出</mu-button>
+        </div>
         <mu-flex class="mu-transition-row">
           <mu-scale-transition v-if="role===666">
-            <mu-button class="mu-transition-box mu-primary-color mu-inverse" v-show="show4">
+            <mu-button :to="{name:'controlUser'}" class="mu-transition-box mu-primary-color mu-inverse" v-show="show4">
               用户管理
             </mu-button>
           </mu-scale-transition>
@@ -228,7 +230,7 @@
     justify-content: center;
     align-items: center;
   }
-  .container{
+  #polBtn{
     text-align: center;
   }
 </style>

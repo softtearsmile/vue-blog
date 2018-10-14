@@ -5,6 +5,7 @@ import personal from '../components/personal'
 import articleDetails from '../components/articleDetails'
 import publishArticle from '../components/publishArticle'
 import controlArticle from '../components/controlArticle'
+import controlUser from '../components/controlUser'
 
 //muse-ui
 import MuseUI from 'muse-ui';
@@ -15,6 +16,7 @@ Vue.use(MuseUI);
 import Axios from 'axios'
 Vue.prototype.$ajax=Axios
 Axios.defaults.withCredentials = true //重点！！!不然请求无法带cookies
+// Axios.defaults.baseURL='http://106.14.145.207:8000/'
 Axios.defaults.baseURL='http://localhost:8000/'
 Vue.prototype.dataURL = (title,id) => {
   if (!id) {id=""}
@@ -56,6 +58,11 @@ export default new Router({
       path: '/personal/controlArticle',
       name: 'controlArticle',
       component: controlArticle
+    },
+    {
+      path: '/personal/controlUser',
+      name: 'controlUser',
+      component: controlUser
     },
 
   ]

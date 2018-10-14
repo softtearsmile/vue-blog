@@ -15,7 +15,7 @@ let store = new Vuex.Store({
     //用户名称
     username:'',
     //用户权限
-    role:1
+    role:1,
   },
   mutations: {
     conSession(state, bool) {

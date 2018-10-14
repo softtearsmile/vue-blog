@@ -4,7 +4,7 @@
       <mu-text-field v-model="title" placeholder="请输入文章标题" :max-length="20"></mu-text-field>
       <br/>
       <mu-text-field v-model="content" placeholder="请输入文章内容" multi-line :rows="10"
-                     :max-length="1000"></mu-text-field>
+                     :max-length="10000"></mu-text-field>
       <br/>
     </mu-container>
     <div id="btn">
@@ -33,11 +33,11 @@
     },
     methods: {
       submit() {
-        console.log(this.title)
-        console.log(this.content)
+        // console.log(this.title)
+        // console.log(this.content)
         this.$ajax.post('article', {title: this.title, content: this.content})
           .then(res => {
-            console.log(res.data)
+            // console.log(res.data)
             this.openSimple = true
             this.openMsg = res.data.msg
             setTimeout(() => {

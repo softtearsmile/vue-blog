@@ -15,9 +15,8 @@
           </mu-list-item-title>
           <mu-list-item-sub-title>
             <span style="color: rgba(0, 0, 0, .87)">
-              {{item.author.username}} -</span>
-              {{new Date(item.created).toLocaleString()}} -</span>
-            {{item.content}}
+              {{item.author.username}} 发表于 {{new Date(item.created).toLocaleString()}}
+               </span>
           </mu-list-item-sub-title>
         </mu-list-item-content>
       </mu-list-item>
@@ -77,7 +76,5 @@
     margin: 0 10px;
   }
 
-  a {
-    color: #42b983;
-  }
+
 </style>
