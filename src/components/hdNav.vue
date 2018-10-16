@@ -21,7 +21,7 @@
     name: "hdNav",
     data() {
       return{
-        openSimple: false,  //弹窗的显示和隐藏
+        openSimple: false,  //提示弹窗的显示和隐藏
       }
     },
     computed: {

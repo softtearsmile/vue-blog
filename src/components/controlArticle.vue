@@ -68,7 +68,7 @@
                     this.openMsg = res.data.msg
                     setTimeout(() => {
                       window.location.reload()
-                    }, 2000)
+                    }, 1000)
                   }
                 });
             }
@@ -102,22 +102,6 @@
 </script>
 
 <style scoped>
-  table {
-    width: 375px;
-    border: 1px solid black;
-    border-collapse: collapse;
-  }
-
-  table th {
-    width: 100px;
-    height: 50px;
-    border: 1px solid #000;
-    text-align: center;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
   .th {
     list-style: none;
     padding: 0;
@@ -128,12 +112,11 @@
   }
 
   .th li {
-    display: flex;
     width: 300px;
     height: 50px;
     border: 1px solid black;
-    justify-content: space-around;
-    align-items: center;
+    text-align: center;
+    line-height: 50px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

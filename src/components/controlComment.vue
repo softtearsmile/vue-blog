@@ -1,15 +1,15 @@
 <template>
   <div>
     <ul class="th">
-      <li>用户</li>
       <li>文章</li>
-      <li>权限</li>
+      <li>内容</li>
+      <li>时间</li>
       <li>操作</li>
     </ul>
     <ul class="th" v-for="(item,index) in userList" :key="index">
-      <li>{{item.username}}</li>
-      <li>{{item.articleNum}}</li>
-      <li>{{item.role}}</li>
+      <li>{{item.article.title}}</li>
+      <li>{{item.content}}</li>
+      <li>{{item.created}}</li>
       <li>
         <mu-button @click="openAlertDialog(item._id)" color="error">删除</mu-button>
       </li>
@@ -43,8 +43,8 @@
       }
     },
     computed: {
-      session() {
-        this.$store.state.session
+      connector() {
+        this.$store.state.connector
       }
     },
     methods: {
@@ -62,7 +62,7 @@
             } else {
               // console.log(this.session)
               // console.log(uid)
-              this.$ajax.delete('user/delete?uid='+uid)
+              this.$ajax.delete('comment/delete?uid='+uid)
                 .then(res => {
                   // console.log(res.data)
                   if (res.data.status) {
@@ -93,10 +93,13 @@
       }
     },
     created() {
-      this.$ajax.get('user/users')
+      this.$ajax.get('user/comments')
         .then(res => {
-          // console.log(res.data.userList)
-          this.userList = res.data.userList
+          // console.log(res.data)
+          res.data.commentList.forEach((item,index)=>{
+            item.created=new Date(item.created).toLocaleDateString()
+          })
+          this.userList = res.data.commentList
         });
     }
   }

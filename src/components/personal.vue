@@ -45,14 +45,16 @@
           </mu-scale-transition>
         </mu-flex>
         <mu-flex class="mu-transition-row">
-          <mu-scale-transition v-if="0">
-            <mu-button class="mu-transition-box mu-primary-color mu-inverse" v-show="show4">
+          <mu-scale-transition>
+            <mu-button :to="{name:'controlComment'}" class="mu-transition-box mu-primary-color mu-inverse"
+                       v-show="show4">
               评论管理
             </mu-button>
           </mu-scale-transition>
-          <mu-scale-transition v-if="0">
-            <mu-button class="mu-transition-box mu-primary-color mu-inverse" v-show="show4">
+          <mu-scale-transition>
+            <mu-button @click="upfile" class="mu-transition-box mu-primary-color mu-inverse" v-show="show4">
               头像上传
+              <input accept="image/*" type="file" name="file" id="ipt" style="display: none">
             </mu-button>
           </mu-scale-transition>
         </mu-flex>
@@ -128,6 +130,29 @@
       },
       closeSimpleDialog() {
         this.openSimple = false
+      },
+      upfile() {  //图片上传
+        let ipt = document.getElementById('ipt')
+        ipt.onchange = () => {
+          let formData = new FormData
+          if (ipt.files[0].size<61704) {
+            formData.append('file', ipt.files[0])
+            let config = {headers: {'Content-Type': 'multipart/form-data'}}
+            this.$ajax.post('upload', formData, config)
+              .then(res => {
+                // console.log(res)
+                this.openSimple = true
+                this.openMsg = res.data.msg
+                setTimeout(function () {
+                  window.location.reload()
+                },1000)
+              });
+          }else {
+            this.openSimple = true
+            this.openMsg = '请上传小于60KB的图片'
+          }
+        };
+        ipt.click()
       }
     },
     data() {
@@ -166,7 +191,7 @@
       },
 
     },
-    created: function () {
+    created() {
       this.$ajax.get('user')
         .then(res => {
           // console.log(res.data)
@@ -176,10 +201,6 @@
           this.$store.commit('conUid', res.data.uid)
           this.$store.commit('conUsername', res.data.username)
           this.$store.commit('conRole', res.data.role)
-          // console.log(this.session)
-          // console.log(this.uid)
-          // console.log(this.username)
-          // console.log(this.role)
         });
     }
   }
@@ -197,6 +218,7 @@
     margin: 180px 40px 0 40px;
     box-shadow: 3px 3px 3px 3px gainsboro;
   }
+
   /*个人中心*/
   #personal {
     padding: 40px 50px 100px 50px;
@@ -210,9 +232,11 @@
     border-radius: 50%;
     overflow: hidden;
   }
-  h3{
+
+  h3 {
     text-align: center;
   }
+
   .mu-transition-row {
     justify-content: space-around !important;
     text-align: center;
@@ -230,7 +254,8 @@
     justify-content: center;
     align-items: center;
   }
-  #polBtn{
+
+  #polBtn {
     text-align: center;
   }
 </style>

@@ -1,9 +1,9 @@
 <template>
   <div id="wrap">
     <mu-sub-header>文章列表</mu-sub-header>
-    <mu-list textline="three-line" v-for="(item,index) in articleList" :key="index">
+    <mu-list textline="three-line" v-for="item in articleList" :key="item._id">
 
-      <mu-list-item @click="Goto(item.id)" avatar="" :ripple="true" button>
+      <mu-list-item @click="Goto(item._id)" avatar="" :ripple="true" button>
         <mu-list-item-action>
           <mu-avatar>
             <img :src="item.author.avatar">
@@ -15,7 +15,7 @@
           </mu-list-item-title>
           <mu-list-item-sub-title>
             <span style="color: rgba(0, 0, 0, .87)">
-              {{item.author.username}} 发表于 {{new Date(item.created).toLocaleString()}}
+              {{item.author.username}} 发表于 ：{{item.created}}
                </span>
           </mu-list-item-sub-title>
         </mu-list-item-content>
@@ -38,10 +38,10 @@
       //获取文章列表
       this.$ajax.get('/')
         .then(res => {
-          res.data.articleList.forEach((item,index)=>{
-            item.id = index
-          })
           // console.log(res.data.articleList)
+          res.data.articleList.forEach((item,index)=>{
+            item.created = new Date(item.created).toLocaleString()
+          })
           this.articleList = res.data.articleList
         });
       //刷新session

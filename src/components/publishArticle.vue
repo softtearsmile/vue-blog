@@ -35,7 +35,7 @@
       submit() {
         // console.log(this.title)
         // console.log(this.content)
-        this.$ajax.post('article', {title: this.title, content: this.content})
+        this.$ajax.post('article/publish', {title: this.title, content: this.content})
           .then(res => {
             // console.log(res.data)
             this.openSimple = true
