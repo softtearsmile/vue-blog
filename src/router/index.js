@@ -21,8 +21,8 @@ Vue.use(VueLazyload)
 import Axios from 'axios'
 Vue.prototype.$ajax = Axios
 Axios.defaults.withCredentials = true //重点！！!不然请求无法带cookies
-// Axios.defaults.baseURL='http://106.14.145.207:8000/'
-Axios.defaults.baseURL = 'http://localhost:8000/'
+Axios.defaults.baseURL='http://106.14.145.207:8000/'
+// Axios.defaults.baseURL = 'http://localhost:8000/'
 Vue.prototype.dataURL = (title, id) => {
   if (!id) {
     id = ""

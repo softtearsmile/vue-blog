@@ -2,8 +2,8 @@
   <div style="width: 100%">
     <!--按钮-->
     <mu-appbar style="width: 100%;position: fixed;top: 0" color="primary" >
-      <mu-button icon slot="left" @click="">
-        <mu-icon value="" ></mu-icon><!--chevron_left-->
+      <mu-button icon slot="left" @click="prev">
+        <mu-icon value="chevron_left" ></mu-icon>
       </mu-button>
       微笑的个人博客
       <mu-button @click="publish" flat slot="right">发表文章</mu-button>

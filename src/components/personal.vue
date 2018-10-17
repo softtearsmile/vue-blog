@@ -23,7 +23,7 @@
     <!--个人中心-->
     <div id="personal" v-else>
       <div id="img">
-        <img v-lazy="avatar" width="100%" height="100%">
+        <img v-lazy="face" width="100%" height="100%">
       </div>
       <h3>{{username}}</h3>
       <mu-container>
@@ -100,6 +100,7 @@
         });
       },
       logout() {  //退出
+        console.log(this.face)
         this.$ajax.get('user/logout')
           .then(res => {
             // console.log(res.data.session)
@@ -167,7 +168,6 @@
           {validate: (val) => !!val, message: '必须填写密码'},
           {validate: (val) => val.length >= 3 && val.length <= 10, message: '密码长度大于3小于10'}
         ],
-        avatar:'',
         validateForm: {
           username: '',
           password: '',
@@ -176,6 +176,7 @@
         openSimple: false,  //弹窗的显示和隐藏
         openMsg: '',  //弹窗信息
         show4: true,
+        face:'',
       }
     },
     computed: {
@@ -193,12 +194,12 @@
       },
 
     },
-    created() {
+    mounted() {
       this.$ajax.get('user')
         .then(res => {
-          // console.log(res.data)
+          console.log(res.data)
           // console.log(res.data.session)
-          this.avatar = res.data.avatar
+          this.face = res.data.avatar
           //更新登入状态值
           this.$store.commit('conSession', res.data.session)
           this.$store.commit('conUid', res.data.uid)
