@@ -27,7 +27,7 @@
         <!--评论者头像、名称、发表时期-->
         <div class="commentUser">
           <div class="commentImg">
-            <img :src="item.from.avatar" style="width: 100%;height: 100%">
+            <img v-lazy="item.from.avatar" style="width: 100%;height: 100%">
           </div>
           <p style="font-size: 20px;color: deepskyblue">{{item.from.username}}</p>
           <p>{{item.created}}</p>

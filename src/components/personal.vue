@@ -23,7 +23,7 @@
     <!--个人中心-->
     <div id="personal" v-else>
       <div id="img">
-        <img src="http://106.14.145.207/node/images/遥.jpg" width="100%" height="100%">
+        <img v-lazy="avatar" width="100%" height="100%">
       </div>
       <h3>{{username}}</h3>
       <mu-container>
@@ -52,6 +52,7 @@
             </mu-button>
           </mu-scale-transition>
           <mu-scale-transition>
+            <!--:to="{name:'upUserFace'}"-->
             <mu-button @click="upfile" class="mu-transition-box mu-primary-color mu-inverse" v-show="show4">
               头像上传
               <input accept="image/*" type="file" name="file" id="ipt" style="display: none">
@@ -136,8 +137,9 @@
         ipt.onchange = () => {
           let formData = new FormData
           if (ipt.files[0].size<61704) {
-            formData.append('file', ipt.files[0])
+            formData.append('file', ipt.files[0],ipt.files[0].name)
             let config = {headers: {'Content-Type': 'multipart/form-data'}}
+
             this.$ajax.post('upload', formData, config)
               .then(res => {
                 // console.log(res)
@@ -165,7 +167,7 @@
           {validate: (val) => !!val, message: '必须填写密码'},
           {validate: (val) => val.length >= 3 && val.length <= 10, message: '密码长度大于3小于10'}
         ],
-        // argeeRules: [{validate: (val) => !!val, message: '必须同意用户协议'}],
+        avatar:'',
         validateForm: {
           username: '',
           password: '',
@@ -196,6 +198,7 @@
         .then(res => {
           // console.log(res.data)
           // console.log(res.data.session)
+          this.avatar = res.data.avatar
           //更新登入状态值
           this.$store.commit('conSession', res.data.session)
           this.$store.commit('conUid', res.data.uid)

@@ -6,7 +6,7 @@
       <mu-list-item @click="Goto(item._id)" avatar="" :ripple="true" button>
         <mu-list-item-action>
           <mu-avatar>
-            <img :src="item.author.avatar">
+            <img v-lazy="item.author.avatar">
           </mu-avatar>
         </mu-list-item-action>
         <mu-list-item-content>

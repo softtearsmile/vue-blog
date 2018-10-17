@@ -11,20 +11,18 @@ import controlComment from '../components/controlComment'
 //muse-ui
 import MuseUI from 'muse-ui';
 import 'muse-ui/dist/muse-ui.css';
-
 Vue.use(MuseUI);
 
-//jquery
-import $ from 'jquery'
-Vue.prototype.$ = $
+//赖加载
+import VueLazyload from 'vue-lazyload'
+Vue.use(VueLazyload)
 
 //Axios
 import Axios from 'axios'
-
 Vue.prototype.$ajax = Axios
 Axios.defaults.withCredentials = true //重点！！!不然请求无法带cookies
-Axios.defaults.baseURL='http://106.14.145.207:8000/'
-// Axios.defaults.baseURL = 'http://localhost:8000/'
+// Axios.defaults.baseURL='http://106.14.145.207:8000/'
+Axios.defaults.baseURL = 'http://localhost:8000/'
 Vue.prototype.dataURL = (title, id) => {
   if (!id) {
     id = ""
@@ -34,12 +32,10 @@ Vue.prototype.dataURL = (title, id) => {
 
 //头部
 import hdNav from '../components/hdNav'
-
 Vue.component('hdNav', hdNav)
 
 //底部
 import ftNav from '../components/ftNav'
-
 Vue.component('ftNav', ftNav)
 
 Vue.use(Router)
