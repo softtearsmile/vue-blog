@@ -4,15 +4,12 @@
     <div id="login" v-if="session">
       <mu-container>
         <mu-form ref="form" :model="validateForm" class="mu-demo-form">
-          <mu-form-item label="用户名" help-text="" prop="username" :rules="usernameRules">
+          <mu-form-item label="用户名" help-text="请输入:中文、英文、数字、符号( _ ),长度2-6" prop="username" :rules="usernameRules">
             <mu-text-field v-model="validateForm.username" prop="username"></mu-text-field>
           </mu-form-item>
-          <mu-form-item label="密码" prop="password" :rules="passwordRules">
+          <mu-form-item label="密码" help-text="请输入:英文、数字、符号( _ . # @ ? ),长度3-10" prop="password" :rules="passwordRules">
             <mu-text-field type="password" v-model="validateForm.password" prop="password"></mu-text-field>
           </mu-form-item>
-          <!--<mu-form-item prop="isAgree" :rules="argeeRules">-->
-          <!--<mu-checkbox label="同意用户协议" v-model="validateForm.isAgree"></mu-checkbox>-->
-          <!--</mu-form-item>-->
           <mu-form-item>
             <mu-button color="primary" @click="login">登入</mu-button>
             <mu-button @click="reg">注册</mu-button>
@@ -100,7 +97,7 @@
         });
       },
       logout() {  //退出
-        console.log(this.face)
+
         this.$ajax.get('user/logout')
           .then(res => {
             // console.log(res.data.session)
@@ -161,12 +158,14 @@
     data() {
       return {
         usernameRules: [ //表单输入
-          {validate: (val) => !!val, message: '必须填写用户名'},
-          {validate: (val) => val.length >= 3, message: '用户名长度大于3'}
+          {validate: (val) => /^[\w|\u4e00-\u9fa5]{2,6}$/.test(val),
+            message: '用户名错误'
+          }
         ],
         passwordRules: [
-          {validate: (val) => !!val, message: '必须填写密码'},
-          {validate: (val) => val.length >= 3 && val.length <= 10, message: '密码长度大于3小于10'}
+          {validate: (val) => /^([\w|\.|#|@|,|\?|\$]){3,10}$/.test(val),
+            message: '密码错误'
+          }
         ],
         validateForm: {
           username: '',
@@ -197,7 +196,7 @@
     mounted() {
       this.$ajax.get('user')
         .then(res => {
-          console.log(res.data)
+          // console.log(res.data)
           // console.log(res.data.session)
           this.face = res.data.avatar
           //更新登入状态值
